@@ -1,47 +1,79 @@
-import { useState } from "react"
+import { useState } from "react";
+import Swal from 'sweetalert2';
+import { v4 as uuidv4 } from 'uuid';
 
 
+const Formulario = ({agregarTodos}) => {
 
-const Formulario = () => {
+const inicioDeFormulario = {
+        nombre:'',
+        description:'',
+        selection:'',
+        prioridad: false,
+     
+     }
+     
+const [todo, setTodo] = useState(inicioDeFormulario);
 
-   const [todo, setTodo] = useState({
-       todoNombre:'',
-       todoDescripcion:'',
-       todoSelection:'',
-       todoCheck: false,
-   }) 
+const {nombre,description,selection,prioridad} = todo;
 
+const handleChange = (e)=>{
 
+    const {name,value,type,checked} = e.target
 
-   const handleSubmit = (e) =>{
-       e.target.prevenDefault()
-       
+    setTodo((old)=>({
+        ...old,
+        [name]: type === 'checked' ? checked : value,
+    }))
+    
+  
+}
+
+const handleSubmit = (e)=>{
+    e.preventDefault()
+    
+    if (!nombre.trim()) {
+        Swal.fire({
+            title: 'Error!',
+            text: 'Do you want to continue',
+            icon: 'error',
+            confirmButtonText: 'Cool'
+          })
+   
+    }
+    Swal.fire({
+        title: 'Exito!',
+        text: 'Do you want to continue',
+        icon: 'success',
+        confirmButtonText: 'Cool'
+      })
+    //   console.log(todo)
+
+      agregarTodos({
+          nombre: nombre,
+          description: description,
+          selection: selection,
+          prioridad: false,
+          id:uuidv4(),
+      });
+
       
-   }
-
-   const handleChange = (e)=>{
-    const {name,type,checked,value} = e.target
-      
-    setTodo({
-           
-           ...todo,
-           [name]: type === 'checkbox' ? checked : value
-
-       })
-   }
+}
 
    
 return (
         <>
-          <form onSubmit={handleSubmit}>
+          <form  onSubmit={handleSubmit}>
               <input 
               name='todoNombre'
               className='form-control mb-2'
               placeholder='Ingrese su name'
               onChange={handleChange}
               value={todo.todoNombre}
+               />
+             
               
-              />
+             
 
               <textarea 
               name='todoDescripcion'
@@ -57,24 +89,22 @@ return (
               className='form-control mb-2'
               onChange={handleChange}
               value={todo.todoSelection}
-            
               >
-                  <option value="pendiente">Pendiente</option>
-                  <option value="completo">Completado</option>
+               <option value="pendiente">Pendiente</option>
+               <option value="completo">Completado</option>
               </select>
+              
+               
 
               <div className="form-check">
                      <input 
                      className="form-check-input" 
                      type="checkbox"
-                     name='todoCheck' 
-                     checked={todo.todoCheck}
+                     name='todoPrioridad' 
                      onChange={handleChange}
-                 
+                     checked={todo.todoPrioridad}
                      
-                     
-                     
-                     />
+                       />
                      
                      <label 
                      className="form-check-label" 
@@ -84,16 +114,21 @@ return (
                      
                      
              </div>
+                 
+                     
+                     
+                     
+                   
 
              
 
               <button 
               className='btn btn-primary mb-2'
               type='submit'
-              
               >
                   Enviar
               </button>
+              
 
           </form>  
         </>
