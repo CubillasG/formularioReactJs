@@ -1,94 +1,106 @@
-import { useState } from "react";
-import Swal from 'sweetalert2';
+import { useState} from 'react'
+import Swal from 'sweetalert2'
 import { v4 as uuidv4 } from 'uuid';
 
-
-const Formulario = ({agregarTodos}) => {
-
-const inicioDeFormulario = {
-        nombre:'',
-        description:'',
-        selection:'',
-        prioridad: false,
-     
-     }
-     
-const [todo, setTodo] = useState(inicioDeFormulario);
-
-const {nombre,description,selection,prioridad} = todo;
-
-const handleChange = (e)=>{
-
-    const {name,value,type,checked} = e.target
-
-    setTodo((old)=>({
-        ...old,
-        [name]: type === 'checked' ? checked : value,
-    }))
-    
+const Formulario = ({pintarFormulario}) => {
   
-}
-
-const handleSubmit = (e)=>{
-    e.preventDefault()
-    
-    if (!nombre.trim()) {
-        Swal.fire({
-            title: 'Error!',
-            text: 'Do you want to continue',
-            icon: 'error',
-            confirmButtonText: 'Cool'
-          })
+    const inicioDeFormulario = {
+    Nombre: '',
+    Descripcion: '',
+    Selection:'',
+    Prioridad: false, 
+   }
    
-    }
-    Swal.fire({
-        title: 'Exito!',
-        text: 'Do you want to continue',
-        icon: 'success',
-        confirmButtonText: 'Cool'
+  const [todo, setTodo] = useState(inicioDeFormulario);
+
+  const handleChange = (e)=>{
+    const {name, type, checked, value} = e.target
+    setTodo({
+      ...todo,
+      [name] : type === 'checkbox' ? checked : value
+    })
+  }
+
+  const handlesubmit = (e)=>{
+    e.preventDefault()
+
+    if(!Nombre.trim()){
+    
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+        footer: '<a href="">Why do I have this issue?</a>'
       })
-    //   console.log(todo)
+     return
 
-      agregarTodos({
-          nombre: nombre,
-          description: description,
-          selection: selection,
-          prioridad: false,
-          id:uuidv4(),
-      });
-
+    }
+    if(!Descripcion.trim()){
       
-}
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Por favor, agregue una descripcion!',
+        footer: '<a href="">Why do I have this issue?</a>'
+      })
+      return
+    }
+
+    Swal.fire({
+      icon: 'success',
+      title: 'Oops...',
+      text: 'Exito',
+      footer: '<a href="">Why do I have this issue?</a>'
+    })
+
+    pintarFormulario({
+      Nombre,
+      Descripcion,
+      Selection,
+      Prioridad: false,
+      id:uuidv4()
+
+    })
+   console.log(todo) 
+
+   setTodo(inicioDeFormulario)
+  
+  }
+
+  const {Nombre, Descripcion, Selection, Prioridad} = todo;
+   
 
    
 return (
         <>
-          <form  onSubmit={handleSubmit}>
+          <form  onSubmit={handlesubmit}>
               <input 
-              name='todoNombre'
+              name='Nombre'
               className='form-control mb-2'
               placeholder='Ingrese su name'
+              value={Nombre}
               onChange={handleChange}
-              value={todo.todoNombre}
+            
+             
                />
              
               
              
 
               <textarea 
-              name='todoDescripcion'
+              name='Descripcion'
               className='form-control mb-2'
               placeholder='Descripcion'
+              Value={Descripcion}
               onChange={handleChange}
-              value={todo.todoDescripcion}
               >
               </textarea>
 
               <select 
-              name="todoSelection" 
+              name="Selection" 
               className='form-control mb-2'
+              value={Selection}
               onChange={handleChange}
-              value={todo.todoSelection}
               >
                <option value="pendiente">Pendiente</option>
                <option value="completo">Completado</option>
@@ -100,9 +112,9 @@ return (
                      <input 
                      className="form-check-input" 
                      type="checkbox"
-                     name='todoPrioridad' 
+                     name='Prioridad' 
+                     checked={Prioridad}
                      onChange={handleChange}
-                     checked={todo.todoPrioridad}
                      
                        />
                      

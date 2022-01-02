@@ -8,7 +8,8 @@ const App = () => {
           <div className='row'>
            <h1>Formulario</h1>
         
-            <TodoList />
+          < TodoList />
+
           </div>
         </div>
        
